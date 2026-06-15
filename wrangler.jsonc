@@ -1,0 +1,26 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "first-click-fight",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-06-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "observability": {
+    "enabled": true
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "first-click-fight",
+      "database_id": "fb15f8aa-06d2-4f90-8bc4-9b191f72a0ad",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "vars": {
+    "NEXT_PUBLIC_BASE_URL": "https://first-click-fight.veithly.workers.dev",
+    "NEXT_PUBLIC_NOVUS_APP_ID": ""
+  }
+}

@@ -1,0 +1,220 @@
+{
+  "$schema": "https://hackathonhunter.example.com/schemas/stack.lock.json",
+  "project_language": "English",
+  "require_zh_mirror": false,
+  "branch": "DOMAIN",
+  "hackathon": {
+    "name": "Mind the Product presents World Product Day: Everyone Ships Now",
+    "url": "https://mindtheproduct.devpost.com/",
+    "deadline": "2026-06-20T17:00:00+01:00"
+  },
+  "delivery_mode": "combined-pitch-demo",
+  "delivery_mode_reason": "Online Devpost submissions use a hosted demo video URL and no separate mandatory deck slot; the combined pitch plus demo video is the judging artifact.",
+  "video_target_duration_s": 270,
+  "video_resolution": "1920x1200",
+  "video_composer": "hyperframes",
+  "frontend": {
+    "framework": "next@latest",
+    "router": "App Router",
+    "styling": "tailwind@latest as utility plumbing only",
+    "dependency_policy": "frontend deps install with @latest or unversioned targets unless a verified override is recorded",
+    "visual_style_lane": "ringside-product-lab",
+    "primary_ui_library": "@mantine/core + @mantine/hooks",
+    "supporting_ui_library": "motion + qrcode.react",
+    "non_tailwind_visual_signature": "boxing-ring screen, click crosshair, KO stamp, replay filmstrip, rematch route ribbon",
+    "component_blocks": [
+      "HeroArena",
+      "ProductScreenArena",
+      "ClarityKOCard",
+      "RouteRibbon",
+      "QRInvite"
+    ],
+    "hero_composition": "product ring plus KO card plus rematch route ribbon",
+    "visual_differentiation_note": "A playable first-click fight replaces the generic AI gradient, chat panel, dashboard, or checklist.",
+    "forbidden_lookalikes": [
+      "generic purple AI SaaS hero",
+      "analytics dashboard",
+      "Novus console clone",
+      "launch checklist"
+    ],
+    "qr_mobile_access": {
+      "entry": "QR opens /fight/[fightId]?src=qr directly on mobile",
+      "mobile_primary_flow": "scan QR, tap one product target, inspect card",
+      "desktop_parity_plan": "desktop keeps arena, card, route ribbon, and keyboard shortcuts visible",
+      "viewports_to_test": [
+        "390x844",
+        "1920x1200"
+      ]
+    },
+    "asset_sources": {
+      "logo": "logo-generator skill output under public/brand",
+      "avatars": "visitor initials seeded by visitor_session_id",
+      "generated_images": [],
+      "cutout_assets": {
+        "raw_dirs": [
+          "public/art/raw",
+          "pitch/illustrations/raw"
+        ],
+        "output_dirs": [
+          "public/art/cutouts",
+          "pitch/illustrations/cutouts"
+        ],
+        "command": "node hackathonhunter/scripts/cutout_assets.mjs public/art/raw --out public/art/cutouts --brief-dir docs/ui-mockups/prompts --usage app-shell --auto-key --trim"
+      }
+    },
+    "motion": [
+      "motion"
+    ]
+  },
+  "backend": {
+    "runtime": "cloudflare-workers",
+    "adapter": "@opennextjs/cloudflare",
+    "api": "Next.js Route Handlers + Server Actions"
+  },
+  "domain": {
+    "name": "product-workflow",
+    "professional_context": "PM-builder first-run clarity, stranger first action, shipped rematch",
+    "required_integrations": [
+      "Novus.ai",
+      "Cloudflare D1"
+    ],
+    "real_backbones": [
+      "persistent state",
+      "usage-learning instrumentation",
+      "public route handoff"
+    ]
+  },
+  "deploy": {
+    "frontend": "cloudflare-workers",
+    "backend": "cloudflare-workers",
+    "adapter": "@opennextjs/cloudflare",
+    "bindings": {
+      "d1": [
+        "DB"
+      ],
+      "kv": [],
+      "r2": [],
+      "queues": []
+    },
+    "production_url": "https://first-click-fight.veithly.workers.dev",
+    "smoke_tested_at": "2026-06-16T01:00:00+08:00",
+    "last_smoke": "Live hero loop: create fight -> separate-session first click (CTA_DEFENDED) -> KO card 200 -> GET /api/usage shows 2 D1 usage_events from 2 distinct sessions. Visual QA scan 0 errors / 0 warnings desktop+mobile.",
+    "cloudflare_override_reason": ""
+  },
+  "required_env": [
+    {
+      "name": "NEXT_PUBLIC_NOVUS_APP_ID",
+      "scope": "client-public",
+      "required": false,
+      "required_for": "Optional Novus tag once the Novus workspace is connected; the app ships the first-party usage loop without it",
+      "official_key_url": "https://www.novus.com/",
+      "storage": ".env.local and Cloudflare dashboard variable",
+      "status": "not-required for the hero path; deferred to Novus connect (G7)"
+    },
+    {
+      "name": "OWNER_KEY_SECRET",
+      "scope": "server",
+      "required_for": "signing owner rematch links",
+      "official_key_url": "https://developers.cloudflare.com/workers/configuration/secrets/",
+      "storage": ".dev.vars locally and Wrangler secret for deploy",
+      "status": "configured (.dev.vars set locally; wrangler secret at deploy)"
+    },
+    {
+      "name": "NEXT_PUBLIC_BASE_URL",
+      "scope": "client-public",
+      "required_for": "card share links and QR routes",
+      "official_key_url": "https://developers.cloudflare.com/workers/",
+      "storage": ".env.local and Cloudflare dashboard variable",
+      "status": "set-after-deploy"
+    },
+    {
+      "name": "DB",
+      "scope": "server",
+      "required_for": "D1 fights, clicks, cards, and usage events",
+      "official_key_url": "https://developers.cloudflare.com/d1/",
+      "storage": "wrangler binding",
+      "status": "configured (wrangler D1 binding DB; local migrated, remote provisioned)"
+    }
+  ],
+  "real_data_sources": [
+    {
+      "id": "hero-real-backbone",
+      "type": "storage",
+      "source": "Cloudflare D1 tables fights, clicks, cards, usage_events",
+      "evidence": "D1 row ids surfaced in card/replay and Playwright trace"
+    },
+    {
+      "id": "usage-learning-loop",
+      "type": "database",
+      "source": "Cloudflare D1 usage_events table written by recordUsageEvent and aggregated by buildUsageSummary",
+      "evidence": "GET /api/usage rows (fcf_fight_created, fcf_first_action_clicked, fcf_result_inspected, fcf_rematch_shipped) and the learning line that decides the rematch route"
+    }
+  ],
+  "sponsor_technology": [
+    {
+      "name": "Novus by Pendo (usage-learning)",
+      "primitive": "product-usage observation that informs what ships next",
+      "reviewer_visible_use": "Every action is recorded in a first-party D1 usage_events loop that is the inspectable proof now, and the repo is structured for Novus to connect over GitHub and open its instrumentation PR before final submission.",
+      "proof": "D1 usage_events rows via GET /api/usage, buildUsageSummary recommendation, .hunter/runtime-interaction.report.json, and Novus connect steps documented in SUBMISSION.md",
+      "depth": "core mechanism: recorded usage decides the rematch route"
+    }
+  ],
+  "sponsor_technology_not_applicable_reason": "",
+  "product_backbone": {
+    "identity": "guest cookie plus signed owner key",
+    "storage": "D1",
+    "ownership_fields": [
+      "owner_session_id",
+      "owner_key_hash",
+      "fight_id",
+      "card_id",
+      "visitor_session_id"
+    ],
+    "multi_user_proof": "incognito or phone creates first click, owner browser ships rematch, second visitor route changes",
+    "stateless_exception_reason": ""
+  },
+  "feature_density": {
+    "user_case_beats": [
+      {
+        "user_case": "HERO PATH",
+        "beat": "Builder marks intended CTA and creates fight",
+        "route": "/app/new",
+        "action_selector": "[data-testid='builder-create-fight']",
+        "state_change": "D1 fights row changes from draft to live",
+        "backend_evidence": "POST /api/fights + tests/hero.spec.ts"
+      },
+      {
+        "user_case": "HERO PATH",
+        "beat": "Judge clicks where they would start",
+        "route": "/fight/[fightId]",
+        "action_selector": "[data-testid='judge-click-surface']",
+        "state_change": "D1 clicks row and card slug created",
+        "backend_evidence": "POST /api/fights/[id]/clicks + tests/hero.spec.ts"
+      },
+      {
+        "user_case": "Builder learns",
+        "beat": "Owner ships rematch and second visitor route changes",
+        "route": "/card/[cardSlug]/owner",
+        "action_selector": "[data-testid='ship-rematch']",
+        "state_change": "D1 fights.rematch_state becomes rematch_shipped",
+        "backend_evidence": "POST /api/fights/[id]/ship-rematch + tests/rematch.spec.ts"
+      }
+    ]
+  },
+  "operability": {
+    "fresh_user_hero_path": "Playwright fresh context completes /fight/[id] -> /card/[slug]",
+    "public_access": "guest access; judge routes have no auth wall",
+    "reset_or_seed_strategy": "seed screens idempotently upsert into D1 and reset only demo rows",
+    "abuse_limits": "20 click attempts per session per hour; first official click per fight per session"
+  },
+  "prd_coverage": {
+    "source": "pitch/project_prd.md",
+    "minimum": "every P0/P1 REQ row has route, API, real data, test, and deploy evidence before recording"
+  },
+  "extras": {
+    "auth": "guest cookie plus owner key",
+    "db": "Cloudflare D1",
+    "analytics": "Novus.ai for challenge-required learning loop",
+    "errorTracking": "console/network captured by Playwright traces"
+  }
+}
