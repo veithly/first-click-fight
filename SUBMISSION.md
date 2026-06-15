@@ -15,15 +15,15 @@ Score a visitor's first click and ship a clearer route in 30 seconds.
 A PM-builder uses First-Click Fight to mark the CTA they expect. A fresh visitor's first click is saved and scored into a Clarity KO Card at /card/[cardSlug], and GET /api/usage shows the recorded events that decide the 30-second rematch route.
 
 ## What it does
-A builder picks a seeded product screen and marks the call to action they expect a stranger to use first. They share a fight link. A fresh visitor opens it with no login and clicks once where they would start. That first official click is saved and scored: the Clarity KO Card reads CTA_DEFENDED when the visitor hit the marked target, or CTA_KNOCKED_OUT when a different element won, with the exact click point on the screen. The owner can then ship a rematch route in one action, and the next visitor sees the promoted target. Every card reopens at a stable link and replays on a phone by QR.
+A builder picks a seeded product screen and marks the call to action they expect a stranger to use first. They share a fight link. A fresh visitor, or a judge with no account, opens it with no login and clicks once where they would start. That first official click is saved and scored: the Clarity KO Card reads CTA_DEFENDED when the visitor hit the marked target, or CTA_KNOCKED_OUT when a different element won, with the exact click point on the screen. The owner can then ship a rematch route in one action, and the next visitor sees the promoted target. Every card reopens at a stable link and replays on a phone by QR.
 
 ## How we built it
 The recorded first click is the mechanism. A guest session cookie lets any visitor play with no account, while the owner action is gated by a signed key carried in the share link. The first click per session is hit-tested against the marked target, written to a relational row, and turned into a saved card. A usage-learning loop records four event types (fight created, first click, result inspected, rematch shipped) and rolls official clicks into a per-target tally and a learning line. That tally, not a guess, decides whether the rematch defends the intended CTA or promotes the challenger. The core path runs through src/app/api/fights/[id]/clicks/route.ts, src/lib/scoring.ts, and src/lib/usage.ts, and a reviewer can check GET /api/usage?fightId=... and the saved card link.
 
-## Why it fits Mind the Product and Novus by Pendo
-- Learn from real product usage -> a fresh visitor's first click is saved and scored, not surveyed -> open /card/[cardSlug]
-- Let usage drive the next change -> the per-target tally promotes a clearer route in the rematch -> GET /api/usage?fightId=...
-- Make the decision inspectable -> four recorded event types feed the learning line -> src/lib/usage.ts and the live usage feed
+## Why it fits the judging criteria
+- Learn from real product usage: a fresh visitor's first click is saved and scored, not surveyed, and you reopen the saved card at https://first-click-fight.veithly.workers.dev
+- Let usage drive the next change: the per-target tally promotes a clearer route in the 30-second rematch, shown at GET /api/usage?fightId=...
+- Make the decision inspectable for Novus by Pendo: four recorded event types feed the learning line in src/lib/usage.ts, the same events a connected Novus workspace can read
 
 ## Challenges we ran into
 The first real fight was duplicate scoring: a visitor who clicked twice could create two cards and skew the tally. The fix made the first official click idempotent per session in recordFirstClick, so a second click preserves the original result and returns the existing card link. Running the cross-browser interaction check against the live route is what surfaced the abort behavior that drove that fix.
@@ -37,7 +37,7 @@ Building it changed where the trust comes from. The convincing part is not the v
 ## What's next for First-Click Fight
 Let builders upload their own screen instead of choosing a seeded one, then connect Novus by Pendo so its usage model can read the same recorded events and propose the rematch automatically.
 
-## Build stack tags
+## Built with
 Next.js App Router, Cloudflare Workers, D1, Mantine, motion, Playwright
 
 ## Track / Category
