@@ -5,6 +5,7 @@ import { NavLink as Link } from "@/components/NavLink";
 import { SegmentedControl } from "@mantine/core";
 import { ProductScreenArena } from "@/components/ProductScreenArena";
 import { SharePanel } from "@/components/SharePanel";
+import { trackNovus } from "@/lib/novus";
 import type { ProductScreen } from "@/lib/types";
 
 interface CreatedFight {
@@ -78,6 +79,7 @@ export function BuilderMarkScreen({ screens }: { screens: ProductScreen[] }) {
       } catch {
         /* storage blocked */
       }
+      trackNovus("fcf_fight_created", { fightId: data.fightId, screenId });
       setCreated({ fightId: data.fightId, ownerKey: data.ownerKey, fightUrl: data.fightUrl });
     } catch (e) {
       setError((e as Error).message);

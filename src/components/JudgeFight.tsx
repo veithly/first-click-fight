@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ProductScreenArena } from "@/components/ProductScreenArena";
+import { trackNovus } from "@/lib/novus";
 import type { ProductScreen } from "@/lib/types";
 
 export function JudgeFight({
@@ -30,6 +31,7 @@ export function JudgeFight({
       });
       const data = (await res.json()) as { cardSlug?: string; error?: string };
       if (!res.ok || !data.cardSlug) throw new Error(data.error ?? "Could not score click");
+      trackNovus("fcf_first_action_clicked", { fightId, cardSlug: data.cardSlug, src });
       // Hard navigation to the result card: it is a shareable destination, so a
       // fresh server render guarantees correct click counts and avoids leaving a
       // soft-navigation RSC stream open behind the reveal.

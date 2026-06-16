@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import type { UsageEventName } from "@/lib/types";
+import { trackNovus } from "@/lib/novus";
 
 export function UsageBeacon({
   event,
@@ -16,6 +17,7 @@ export function UsageBeacon({
   useEffect(() => {
     if (sent.current) return;
     sent.current = true;
+    trackNovus(event, { fightId, cardSlug });
     fetch("/api/usage", {
       method: "POST",
       headers: { "content-type": "application/json" },

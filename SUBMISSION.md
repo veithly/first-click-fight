@@ -56,7 +56,8 @@ https://github.com/veithly/first-click-fight
 https://github.com/veithly/first-click-fight/blob/main/docs/ARCHITECTURE.md
 
 ## Video URL
-The hosted demo link is added here once the final cut is uploaded. The rendered file is pitch/recording/pitch-demo-combined-final.mp4.
+https://youtu.be/WLT48rIay8M
+(Unlisted on YouTube. Source file: pitch/recording/pitch-demo-combined-final.mp4.)
 
 ## Team members
 veithly
