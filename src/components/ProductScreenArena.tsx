@@ -134,9 +134,9 @@ export function ProductScreenArena({
           // Only the builder's "mark" mode exposes real, focusable buttons.
           // Every other mode renders decorative, aria-hidden labels so the
           // play surface owns the click and no inert controls leak to a11y.
-          // Targets are positions on a scaled product-screen mock, not full-size
+          // Targets are positions on a scaled product-screen preview, not full-size
           // controls; the mobile hero action is the full-surface judge tap, so
-          // ring size is allowed to follow the mock's proportions.
+          // ring size is allowed to follow the preview's proportions.
           const targetEl = !clickable ? (
             <div
               className={classes}

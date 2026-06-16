@@ -269,7 +269,7 @@ h3 {
   overflow: hidden;
 }
 
-/* Mock marketing copy lives in the top zone only; targets own the lower band.
+/* Simulated marketing copy lives in the top zone only; targets own the lower band.
    pointer-events: none keeps the play surface in charge of click hit-testing. */
 .screen-copy {
   position: absolute;
