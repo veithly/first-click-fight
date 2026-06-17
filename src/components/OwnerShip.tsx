@@ -8,6 +8,7 @@ import type { RematchChoice } from "@/lib/types";
 interface ShipResponse {
   rematchUrl: string;
   rematchChoice: RematchChoice;
+  challengerTargetId: string | null;
   learningLine: string;
   error?: string;
 }
@@ -41,7 +42,12 @@ export function OwnerShip({
       });
       const data = (await res.json()) as ShipResponse;
       if (!res.ok) throw new Error(data.error ?? "Could not ship rematch");
-      trackNovus("fcf_rematch_shipped", { fightId, rematchChoice: data.rematchChoice });
+      trackNovus("fcf_rematch_shipped", {
+        fightId,
+        rematchChoice: data.rematchChoice,
+        challengerTargetId: data.challengerTargetId,
+        learningLine: data.learningLine,
+      });
       setResult(data);
     } catch (e) {
       setError((e as Error).message);

@@ -29,9 +29,27 @@ export function JudgeFight({
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ nx, ny, src }),
       });
-      const data = (await res.json()) as { cardSlug?: string; error?: string };
+      const data = (await res.json()) as {
+        cardSlug?: string;
+        result?: string;
+        actualTargetId?: string | null;
+        duplicate?: boolean;
+        error?: string;
+      };
       if (!res.ok || !data.cardSlug) throw new Error(data.error ?? "Could not score click");
-      trackNovus("fcf_first_action_clicked", { fightId, cardSlug: data.cardSlug, src });
+      const matchedLabel = data.actualTargetId
+        ? screen.targets.find((t) => t.id === data.actualTargetId)?.label
+        : undefined;
+      trackNovus("fcf_first_action_clicked", {
+        fightId,
+        cardSlug: data.cardSlug,
+        src,
+        result: data.result,
+        matchedTargetId: data.actualTargetId,
+        matchedLabel,
+        screenId: screen.id,
+        duplicate: data.duplicate,
+      });
       // Hard navigation to the result card: it is a shareable destination, so a
       // fresh server render guarantees correct click counts and avoids leaving a
       // soft-navigation RSC stream open behind the reveal.

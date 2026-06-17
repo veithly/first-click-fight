@@ -2,15 +2,22 @@
 
 import { useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
+import { trackNovus } from "@/lib/novus";
 
 export function SharePanel({
   url,
   label = "Share this fight",
   hint = "Send it to a stranger, or scan to play on your phone.",
+  fightId,
+  cardSlug,
+  shareContext,
 }: {
   url: string;
   label?: string;
   hint?: string;
+  fightId?: string;
+  cardSlug?: string;
+  shareContext?: string;
 }) {
   const [copied, setCopied] = useState(false);
 
@@ -18,6 +25,7 @@ export function SharePanel({
     try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
+      trackNovus("fcf_link_shared", { url, shareContext, fightId, cardSlug });
       setTimeout(() => setCopied(false), 1600);
     } catch {
       setCopied(false);

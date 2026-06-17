@@ -79,7 +79,13 @@ export function BuilderMarkScreen({ screens }: { screens: ProductScreen[] }) {
       } catch {
         /* storage blocked */
       }
-      trackNovus("fcf_fight_created", { fightId: data.fightId, screenId });
+      trackNovus("fcf_fight_created", {
+        fightId: data.fightId,
+        screenId,
+        intendedTargetId: targetId,
+        screenName: screen?.name,
+        screenKind: screen?.kind,
+      });
       setCreated({ fightId: data.fightId, ownerKey: data.ownerKey, fightUrl: data.fightUrl });
     } catch (e) {
       setError((e as Error).message);
@@ -109,7 +115,7 @@ export function BuilderMarkScreen({ screens }: { screens: ProductScreen[] }) {
         </div>
 
         <div className="panel panel--paper">
-          <SharePanel url={created.fightUrl} />
+          <SharePanel url={created.fightUrl} fightId={created.fightId} shareContext="fight" />
           <div className="btn-row">
             <Link href={`/fight/${created.fightId}`} className="btn btn--route" data-testid="open-as-judge">
               Open fight as judge

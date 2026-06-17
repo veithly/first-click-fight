@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
+import { trackNovus } from "@/lib/novus";
 import type { CardResult } from "@/lib/types";
 
 export function ReplayStamp({
@@ -19,6 +20,7 @@ export function ReplayStamp({
 
   function replay() {
     setReplayKey((k) => k + 1);
+    trackNovus("fcf_card_replayed", { fightId, cardSlug, result });
     fetch("/api/usage", {
       method: "POST",
       headers: { "content-type": "application/json" },

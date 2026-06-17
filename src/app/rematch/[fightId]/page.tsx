@@ -36,7 +36,17 @@ export default async function RematchPage({ params }: { params: Promise<{ fightI
       data-hero-composition="product-ring-ko-card-route-ribbon"
     >
       <TopBar crumb={`rematch ${fightId}`} />
-      <UsageBeacon event="fcf_rematch_returned" fightId={fightId} />
+      <UsageBeacon
+        event="fcf_rematch_returned"
+        fightId={fightId}
+        properties={{
+          shipped: view.shipped,
+          promotedTargetId: view.promotedTargetId,
+          rematchChoice: view.fight.rematchChoice,
+          beforeLabel: view.beforeLabel,
+          afterLabel: view.afterLabel,
+        }}
+      />
 
       <section className="section" style={{ marginTop: 8 }}>
         <div className="section-head">
