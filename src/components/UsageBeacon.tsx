@@ -8,16 +8,18 @@ export function UsageBeacon({
   event,
   fightId,
   cardSlug,
+  properties,
 }: {
   event: Extract<UsageEventName, "fcf_result_inspected" | "fcf_rematch_returned">;
   fightId: string;
   cardSlug?: string;
+  properties?: Record<string, unknown>;
 }) {
   const sent = useRef(false);
   useEffect(() => {
     if (sent.current) return;
     sent.current = true;
-    trackNovus(event, { fightId, cardSlug });
+    trackNovus(event, { fightId, cardSlug, ...properties });
     fetch("/api/usage", {
       method: "POST",
       headers: { "content-type": "application/json" },

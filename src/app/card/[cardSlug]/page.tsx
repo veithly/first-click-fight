@@ -51,7 +51,12 @@ export default async function CardPage({ params }: { params: Promise<{ cardSlug:
       data-hero-composition="product-ring-ko-card-route-ribbon"
     >
       <TopBar crumb={`card ${cardSlug}`} />
-      <UsageBeacon event="fcf_result_inspected" fightId={fight.id} cardSlug={cardSlug} />
+      <UsageBeacon
+        event="fcf_result_inspected"
+        fightId={fight.id}
+        cardSlug={cardSlug}
+        properties={{ result: card.result, screenId: screen.id, screenName: screen.name }}
+      />
 
       <section className="section" style={{ marginTop: 8 }}>
         <div className="grid-2">
@@ -115,6 +120,9 @@ export default async function CardPage({ params }: { params: Promise<{ cardSlug:
             url={`${base}/card/${cardSlug}`}
             label="Share this card"
             hint="Send the result to a teammate, or post it with an honest caption."
+            fightId={fight.id}
+            cardSlug={cardSlug}
+            shareContext="card"
           />
         </div>
       </section>

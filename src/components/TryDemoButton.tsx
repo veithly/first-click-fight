@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { trackNovus } from "@/lib/novus";
 
 export function TryDemoButton({
   screenId = "saas-landing",
@@ -29,6 +30,7 @@ export function TryDemoButton({
       });
       const data = (await res.json()) as { fightId?: string; error?: string };
       if (!res.ok || !data.fightId) throw new Error(data.error ?? "Could not start demo");
+      trackNovus("fcf_demo_started", { fightId: data.fightId, screenId, intendedTargetId });
       router.push(`/fight/${data.fightId}?demo=1`);
     } catch (e) {
       setError((e as Error).message);

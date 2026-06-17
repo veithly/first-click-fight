@@ -74,7 +74,9 @@ export type UsageEventName =
   | "fcf_result_inspected"
   | "fcf_card_replayed"
   | "fcf_rematch_shipped"
-  | "fcf_rematch_returned";
+  | "fcf_rematch_returned"
+  | "fcf_demo_started"
+  | "fcf_link_shared";
 
 export interface UsageEvent {
   id: string;
